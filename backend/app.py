@@ -32,7 +32,7 @@ app = Flask(__name__)
 CORS(
     app,
     resources={r"/*": {"origins": "*"}},
-    supports_credentials=True
+    supports_credentials=False
 )
 
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=6)
@@ -48,12 +48,11 @@ def ensure_demo_user():
         return
 
     with engine.begin() as conn:
-        result = conn.execute(
-            text("SELECT username FROM users WHERE username = 'demo'")
+        user = conn.execute(
+            text("SELECT 1 FROM users WHERE username = 'demo'")
         ).fetchone()
 
-        if not result:
-            demo_password = hash_password("demo123")
+        if not user:
             conn.execute(
                 text("""
                     INSERT INTO users (username, password, role, email, active)
@@ -61,24 +60,24 @@ def ensure_demo_user():
                 """),
                 {
                     "u": "demo",
-                    "p": demo_password,
+                    "p": hash_password("demo123"),
                     "r": "viewer",
                     "e": "demo@cloudcost.local"
                 }
             )
             print("✅ Demo user created")
-        else:
-            print("ℹ️ Demo user already exists")
             
-            ensure_demo_user()
-
-
 
 # =========================
 # JWT CONFIG
 # =========================
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-secret")
 jwt = JWTManager(app)
+
+@app.before_first_request
+def startup_tasks():
+    ensure_demo_user()
+
 
 def cleanup_old_audit_logs(days: int):
     with engine.begin() as conn:
@@ -100,6 +99,7 @@ def log_action(username, action, resource):
             """),
             {"u": username, "a": action, "r": resource}
         )
+        
         
 
 # =========================
@@ -177,14 +177,13 @@ Do NOT share it with anyone.
 # =========================
 @app.route("/login", methods=["POST"])
 def login():
-    data = request.get_json(silent=True)
-
-    if not data:
-        return jsonify({"error": "Invalid request"}), 400
+    data = request.get_json(silent=True) or {}
 
     username = data.get("username")
     password = data.get("password")
 
+    if not username or not password:
+        return jsonify({"error": "Username and password required"}), 400
 
     with engine.connect() as conn:
         result = conn.execute(
@@ -196,7 +195,7 @@ def login():
             {"u": username}
         ).fetchone()
 
-    if not result:
+    if result is None:
         return jsonify({"error": "Invalid credentials"}), 401
 
     if not verify_password(password, result.password):
@@ -204,8 +203,7 @@ def login():
 
     if not result.active:
         return jsonify({"error": "User is disabled"}), 403
-    
-    # 🔒 Block admin login in demo mode
+
     if DEMO_MODE and result.role == "admin":
         return jsonify({"error": "Admin login disabled in demo mode"}), 403
 
@@ -214,7 +212,7 @@ def login():
         additional_claims={"role": result.role}
     )
 
-    return jsonify(access_token=token)
+    return jsonify({"access_token": token}), 200
 
 # =========================
 # FORGOT PASSWORD (OTP)
