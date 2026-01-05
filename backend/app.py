@@ -41,6 +41,13 @@ DB_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DB_URL)
 
 # =========================
+# PASSWORD HASHING
+# =========================
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+# =========================
 # DB BOOTSTRAP (SAFE FOR RENDER)
 # =========================
 def init_db():
@@ -91,7 +98,8 @@ def ensure_demo_user():
                 }
             )
             print("✅ Demo user created")
-
+            
+            
 # =========================
 # STARTUP INITIALIZATION (FLASK 3 SAFE)
 # =========================
@@ -132,8 +140,6 @@ def log_action(username, action, resource):
 # =========================
 # HELPERS
 # =========================
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
