@@ -48,11 +48,12 @@ def ensure_demo_user():
         return
 
     with engine.begin() as conn:
-        user = conn.execute(
-            text("SELECT 1 FROM users WHERE username = 'demo'")
+        result = conn.execute(
+            text("SELECT username FROM users WHERE username = 'demo'")
         ).fetchone()
 
-        if not user:
+        if not result:
+            demo_password = hash_password("demo123")
             conn.execute(
                 text("""
                     INSERT INTO users (username, password, role, email, active)
@@ -60,12 +61,19 @@ def ensure_demo_user():
                 """),
                 {
                     "u": "demo",
-                    "p": hash_password("demo123"),
+                    "p": demo_password,
                     "r": "viewer",
                     "e": "demo@cloudcost.local"
                 }
             )
             print("✅ Demo user created")
+        else:
+            print("ℹ️ Demo user already exists")
+
+
+# 🔥 CALL IT ON APP STARTUP (Flask 3 SAFE)
+ensure_demo_user()
+
             
 
 # =========================
@@ -73,10 +81,6 @@ def ensure_demo_user():
 # =========================
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-secret")
 jwt = JWTManager(app)
-
-@app.before_first_request
-def startup_tasks():
-    ensure_demo_user()
 
 
 def cleanup_old_audit_logs(days: int):
