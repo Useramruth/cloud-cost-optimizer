@@ -41,6 +41,31 @@ DB_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DB_URL)
 
 # =========================
+# DB BOOTSTRAP (SAFE FOR RENDER)
+# =========================
+def init_db():
+    with engine.begin() as conn:
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS users (
+                username TEXT PRIMARY KEY,
+                password TEXT NOT NULL,
+                role TEXT NOT NULL,
+                email TEXT,
+                active BOOLEAN DEFAULT TRUE
+            )
+        """))
+
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS audit_logs (
+                id SERIAL PRIMARY KEY,
+                username TEXT,
+                action TEXT,
+                resource TEXT,
+                created_at TIMESTAMP DEFAULT NOW()
+            )
+        """))
+
+# =========================
 # AUTO CREATE DEMO USER (RENDER SAFE)
 # =========================
 def ensure_demo_user():
@@ -49,11 +74,10 @@ def ensure_demo_user():
 
     with engine.begin() as conn:
         result = conn.execute(
-            text("SELECT username FROM users WHERE username = 'demo'")
+            text("SELECT 1 FROM users WHERE username = 'demo'")
         ).fetchone()
 
         if not result:
-            demo_password = hash_password("demo123")
             conn.execute(
                 text("""
                     INSERT INTO users (username, password, role, email, active)
@@ -61,20 +85,19 @@ def ensure_demo_user():
                 """),
                 {
                     "u": "demo",
-                    "p": demo_password,
+                    "p": hash_password("demo123"),
                     "r": "viewer",
                     "e": "demo@cloudcost.local"
                 }
             )
             print("✅ Demo user created")
-        else:
-            print("ℹ️ Demo user already exists")
 
-
-# 🔥 CALL IT ON APP STARTUP (Flask 3 SAFE)
+# =========================
+# STARTUP INITIALIZATION (FLASK 3 SAFE)
+# =========================
+init_db()
 ensure_demo_user()
 
-            
 
 # =========================
 # JWT CONFIG
