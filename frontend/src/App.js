@@ -29,7 +29,7 @@ function App() {
   const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:5001"
-    : "/api";
+    : "https://cloud-cost-optimizer-7z7r.onrender.com";
   const goBackToLogin = () => {
   setForgotMode(false);
   setUsername("");
