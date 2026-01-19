@@ -81,38 +81,8 @@ def init_db():
 # AUTO CREATE DEMO USER (RENDER SAFE)
 # =========================
 def ensure_demo_user():
-    if not DEMO_MODE:
-        return
+    return
 
-    with engine.begin() as conn:
-        result = conn.execute(
-            text("SELECT 1 FROM users WHERE username = 'demo'")
-        ).fetchone()
-
-        if not result:
-            conn.execute(
-                text("""
-                    INSERT INTO users (username, password, role, email, active)
-                    VALUES (:u, :p, :r, :e, true)
-                """),
-                {
-                    "u": "demo",
-                    "p": hash_password("Demo@Cloud#2026!"),
-                    "r": "viewer",
-                    "e": "demo@cloudcost.local"
-                }
-            )
-            conn.execute(
-                text("""
-                    UPDATE users
-                    SET password = :p
-                    WHERE username = 'demo'
-                """),
-                {"p": hash_password("Demo@Cloud#2026!")}
-            )
-            
-            print("✅ Demo user created")
-            
             
 # =========================
 # STARTUP INITIALIZATION (FLASK 3 SAFE)
