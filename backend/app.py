@@ -213,8 +213,11 @@ Do NOT share it with anyone.
 # =========================
 # AUTH
 # =========================
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "OPTIONS"])
 def login():
+    if request.method == "OPTIONS":
+        return "", 204
+    
     data = request.get_json(silent=True) or {}
 
     username = data.get("username")
