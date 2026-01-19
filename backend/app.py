@@ -81,7 +81,7 @@ def init_db():
 # AUTO CREATE DEMO USER (RENDER SAFE)
 # =========================
 def ensure_demo_user():
-    return
+    pass
 
             
 # =========================
@@ -278,17 +278,21 @@ def forgot_password():
 
 @app.route("/reset-password", methods=["POST"])
 def reset_password():
-    data = request.json
+    data = request.json or {}
     username = data.get("username")
     otp = data.get("otp")
     new_password = data.get("new_password")
+
+    if not username or not otp or not new_password:
+        return jsonify({"error": "Missing fields"}), 400
 
     if OTP_STORE.get(username) != otp:
         return jsonify({"error": "Invalid OTP"}), 400
 
     hashed = hash_password(new_password)
 
-    with engine.connect() as conn:
+    # ✅ MUST USE engine.begin() (auto-commit)
+    with engine.begin() as conn:
         conn.execute(
             text("""
                 UPDATE users
@@ -297,11 +301,12 @@ def reset_password():
             """),
             {"p": hashed, "u": username}
         )
-        conn.commit()
+
 
     del OTP_STORE[username]
 
-    return jsonify({"message": "Password reset successful"})
+    return jsonify({"message": "Password reset successful"}), 200
+
 
 # =========================
 # USER MANAGEMENT (ADMIN)
