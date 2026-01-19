@@ -1269,7 +1269,7 @@ return (
     {log.action}
   </td>
   <td>{log.resource}</td>
-  <td>{new Date(log.created_at).toLocaleString()}</td>
+  <td>{log.created_at}</td>
 </tr>
 ))}
       </tbody>
