@@ -4,6 +4,8 @@ import { Github, Linkedin, Cloud } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
 /* =====================
    JWT ROLE DECODER
 ===================== */
@@ -26,10 +28,7 @@ const isTokenValid = (token) => {
 };
 
 function App() {
-  const API_BASE =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5001"
-    : "https://cloud-cost-optimizer-7z7r.onrender.com";
+
   const goBackToLogin = () => {
   setForgotMode(false);
   setUsername("");
