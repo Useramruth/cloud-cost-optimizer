@@ -97,11 +97,20 @@ def ensure_demo_user():
                 """),
                 {
                     "u": "demo",
-                    "p": hash_password("demo123"),
+                    "p": hash_password("Demo@Cloud#2026!"),
                     "r": "viewer",
                     "e": "demo@cloudcost.local"
                 }
             )
+            conn.execute(
+                text("""
+                    UPDATE users
+                    SET password = :p
+                    WHERE username = 'demo'
+                """),
+                {"p": hash_password("Demo@Cloud#2026!")}
+            )
+            
             print("✅ Demo user created")
             
             
