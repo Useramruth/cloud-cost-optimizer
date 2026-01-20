@@ -145,7 +145,10 @@ def is_admin():
 # =========================
 # OTP STORE (TEMP)
 # =========================
+# OTP_STORE structure:
+# { username: {"otp": "123456", "expires": datetime} }
 OTP_STORE = {}
+
 
 # =========================
 # EMAIL CONFIG (GMAIL SMTP)
@@ -249,46 +252,54 @@ def login():
 # =========================
 @app.route("/forgot-password", methods=["POST"])
 def forgot_password():
-    username = request.json.get("username")
+    data = request.get_json(silent=True) or {}
+    username = data.get("username")
 
-    # 1️⃣ Validate input
     if not username:
         return jsonify({"error": "Username required"}), 400
 
-    # 2️⃣ Fetch user from PostgreSQL
+    username = username.strip()
+
     with engine.connect() as conn:
-        result = conn.execute(
+        user = conn.execute(
             text("""
-                SELECT email, active
+                SELECT email, active, role
                 FROM users
                 WHERE username = :u
             """),
             {"u": username}
         ).fetchone()
 
-    # 3️⃣ User / email validation
-    if not result or not result.email:
+    if not user or not user.email:
         return jsonify({"error": "User not found or email not set"}), 404
 
-    if not result.active:
+    if not user.active:
         return jsonify({"error": "User is disabled"}), 403
 
-    # 4️⃣ Generate OTP
-    otp = str(random.randint(100000, 999999))
-    OTP_STORE[username] = otp
+    # 🔒 ALLOW RESET ONLY FOR ADMIN (you can whitelist later)
+    if user.role != "admin":
+        return jsonify({"error": "Password reset not allowed for this user"}), 403
 
-    # 5️⃣ Send OTP email
+    # ✅ Generate OTP (6 digits)
+    otp = f"{random.randint(100000, 999999)}"
+
+    OTP_STORE[username] = {
+        "otp": otp,
+        "expires": datetime.utcnow() + timedelta(minutes=5)
+    }
+
     try:
-        send_otp_email(result.email, otp)
+        send_otp_email(user.email, otp)
     except Exception as e:
         print("OTP EMAIL ERROR:", e)
         return jsonify({"error": "Failed to send OTP email"}), 500
 
-    return jsonify({"message": "OTP sent to registered email"})
+    return jsonify({"message": "OTP sent successfully"}), 200
 
 @app.route("/reset-password", methods=["POST"])
 def reset_password():
-    data = request.json or {}
+    data = request.get_json(silent=True) or {}
+
     username = data.get("username")
     otp = data.get("otp")
     new_password = data.get("new_password")
@@ -296,12 +307,22 @@ def reset_password():
     if not username or not otp or not new_password:
         return jsonify({"error": "Missing fields"}), 400
 
-    if OTP_STORE.get(username) != otp:
+    username = username.strip()
+
+    record = OTP_STORE.get(username)
+
+    if not record:
+        return jsonify({"error": "OTP not requested"}), 400
+
+    if record["otp"] != otp:
         return jsonify({"error": "Invalid OTP"}), 400
+
+    if datetime.utcnow() > record["expires"]:
+        del OTP_STORE[username]
+        return jsonify({"error": "OTP expired"}), 400
 
     hashed = hash_password(new_password)
 
-    # ✅ MUST USE engine.begin() (auto-commit)
     with engine.begin() as conn:
         conn.execute(
             text("""
@@ -311,7 +332,6 @@ def reset_password():
             """),
             {"p": hashed, "u": username}
         )
-
 
     del OTP_STORE[username]
 
