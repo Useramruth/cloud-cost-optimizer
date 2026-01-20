@@ -191,11 +191,6 @@ def send_otp_email(to_email, otp):
         """
     })
 
-    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-        server.starttls()
-        server.login(SMTP_EMAIL, SMTP_PASSWORD)
-        server.send_message(msg)
-
 
 # =========================
 # AUTH
@@ -288,6 +283,7 @@ def forgot_password():
         return jsonify({"error": "Email sending failed"}), 500
 
     return jsonify({"message": "OTP sent successfully"}), 200
+
 
 
 @app.route("/reset-password", methods=["POST"])
