@@ -38,7 +38,14 @@ CORS(
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=6)
 
 DB_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DB_URL)
+engine = create_engine(
+    DB_URL,
+    connect_args={
+        "sslmode": "require"
+    },
+    pool_pre_ping=True,
+    pool_recycle=300
+)
 
 
 @app.route("/")
