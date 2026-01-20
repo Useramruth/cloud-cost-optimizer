@@ -40,11 +40,17 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=6)
 DB_URL = os.getenv("DATABASE_URL")
 engine = create_engine(
     DB_URL,
-    connect_args={
-        "sslmode": "require"
-    },
     pool_pre_ping=True,
-    pool_recycle=300
+    pool_size=5,
+    max_overflow=10,
+    pool_recycle=180,
+    connect_args={
+        "sslmode": "require",
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    }
 )
 
 
@@ -253,14 +259,13 @@ def login():
 @app.route("/forgot-password", methods=["POST"])
 def forgot_password():
     data = request.get_json(silent=True) or {}
-    username = data.get("username")
+    username = (data.get("username") or "").strip()
 
     if not username:
         return jsonify({"error": "Username required"}), 400
 
-    username = username.strip()
-
-    with engine.connect() as conn:
+    # ✅ ALWAYS use engine.begin()
+    with engine.begin() as conn:
         user = conn.execute(
             text("""
                 SELECT email, active, role
@@ -276,11 +281,10 @@ def forgot_password():
     if not user.active:
         return jsonify({"error": "User is disabled"}), 403
 
-    # 🔒 ALLOW RESET ONLY FOR ADMIN (you can whitelist later)
+    # 🔒 ONLY ADMIN CAN RESET
     if user.role != "admin":
-        return jsonify({"error": "Password reset not allowed for this user"}), 403
+        return jsonify({"error": "Password reset not allowed"}), 403
 
-    # ✅ Generate OTP (6 digits)
     otp = f"{random.randint(100000, 999999)}"
 
     OTP_STORE[username] = {
@@ -291,26 +295,24 @@ def forgot_password():
     try:
         send_otp_email(user.email, otp)
     except Exception as e:
-        print("OTP EMAIL ERROR:", e)
-        return jsonify({"error": "Failed to send OTP email"}), 500
+        print("EMAIL ERROR:", e)
+        return jsonify({"error": "Email sending failed"}), 500
 
     return jsonify({"message": "OTP sent successfully"}), 200
+
 
 @app.route("/reset-password", methods=["POST"])
 def reset_password():
     data = request.get_json(silent=True) or {}
 
-    username = data.get("username")
+    username = (data.get("username") or "").strip()
     otp = data.get("otp")
     new_password = data.get("new_password")
 
     if not username or not otp or not new_password:
         return jsonify({"error": "Missing fields"}), 400
 
-    username = username.strip()
-
     record = OTP_STORE.get(username)
-
     if not record:
         return jsonify({"error": "OTP not requested"}), 400
 

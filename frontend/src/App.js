@@ -326,14 +326,20 @@ const [deleteUserConfirm, setDeleteUserConfirm] = useState(null);
      FORGOT PASSWORD
   ===================== */
   const sendOTP = async () => {
-    const res = await fetch(`${API_BASE}/forgot-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username })
-    });
-    const data = await res.json();
-    setMessage(data.message || data.error);
-  };
+  if (!username.trim()) {
+    toast.error("Username required");
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: username.trim() })
+  });
+
+  const data = await res.json();
+  data.message ? toast.success(data.message) : toast.error(data.error);
+};
 
   const resetPassword = async () => {
     const res = await fetch(`${API_BASE}/reset-password`, {
