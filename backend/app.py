@@ -90,20 +90,7 @@ def ensure_demo_user():
 init_db()
 ensure_demo_user()
 
-with engine.begin() as conn:
-    conn.execute(text("""
-        INSERT INTO users (username, password, role, email, active)
-        VALUES (
-            'admin',
-            :p,
-            'admin',
-            'admin@example.com',
-            true
-        )
-        ON CONFLICT (username) DO NOTHING
-    """), {
-        "p": hash_password("Admin@123")
-    })
+
 
 
 
