@@ -331,25 +331,53 @@ const [deleteUserConfirm, setDeleteUserConfirm] = useState(null);
     return;
   }
 
-  const res = await fetch(`${API_BASE}/forgot-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: username.trim() })
-  });
+  try {
+    const res = await fetch(`${API_BASE}/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username.trim() })
+    });
 
-  const data = await res.json();
-  data.message ? toast.success(data.message) : toast.error(data.error);
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success("OTP sent successfully to registered email 📧");
+    } else {
+      toast.error(data.error || "OTP not sent");
+    }
+
+  } catch (err) {
+    toast.error("Server error. OTP not sent");
+  }
 };
 
   const resetPassword = async () => {
+  try {
     const res = await fetch(`${API_BASE}/reset-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, otp, new_password: newPassword })
+      body: JSON.stringify({
+        username: username.trim(),
+        otp: otp.trim(),
+        new_password: newPassword
+      })
     });
+
     const data = await res.json();
-    setMessage(data.message || data.error);
-  };
+
+    if (res.ok) {
+      toast.success("Password reset successful ✅");
+      setMessage("Password reset successful");
+    } else {
+      toast.error(data.error || "Password reset failed");
+      setMessage(data.error || "Reset failed");
+    }
+
+  } catch (err) {
+    toast.error("Server error");
+    setMessage("Server error");
+  }
+};
 
   /* =====================
      FETCH DATA
