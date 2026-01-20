@@ -1,3 +1,4 @@
+import resend
 from dateutil import tz
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -7,7 +8,6 @@ import csv
 from io import StringIO
 from flask import Response
 import bcrypt
-import smtplib
 from sqlalchemy import create_engine, text
 from email.message import EmailMessage
 from flask import Flask, jsonify, request
@@ -23,6 +23,8 @@ import boto3
 import os
 import random
 from datetime import datetime, timedelta
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+resend.api_key = RESEND_API_KEY
 
 DEMO_MODE = os.getenv("DEMO_MODE", "false").lower() == "true"
 
@@ -156,14 +158,6 @@ def is_admin():
 OTP_STORE = {}
 
 
-# =========================
-# EMAIL CONFIG (GMAIL SMTP)
-# =========================
-SMTP_EMAIL = os.getenv("SMTP_EMAIL")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")     # 🔴 16-char app password
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-
 
 # =========================
 # AWS CONFIG
@@ -184,23 +178,18 @@ MONTHLY_BUDGET_LIMIT = 50.0     # USD
 CPU_SPIKE_THRESHOLD = 80.0      # %
 
 def send_otp_email(to_email, otp):
-    msg = EmailMessage()
-    msg["Subject"] = "Cloud Cost Optimizer - OTP"
-    msg["From"] = SMTP_EMAIL
-    msg["To"] = to_email
-
-    msg.set_content(f"""
-Hello,
-
-Your OTP for password reset is:
-
-OTP: {otp}
-
-This OTP is valid for 5 minutes.
-Do NOT share it with anyone.
-
-- Cloud Cost Optimizer Team
-""")
+    resend.Emails.send({
+        "from": "Cloud Cost Optimizer <onboarding@resend.dev>",
+        "to": [to_email],
+        "subject": "Cloud Cost Optimizer - OTP",
+        "html": f"""
+        <h2>Password Reset OTP</h2>
+        <p>Your OTP is:</p>
+        <h1>{otp}</h1>
+        <p>This OTP is valid for 5 minutes.</p>
+        <p>Do NOT share it with anyone.</p>
+        """
+    })
 
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
         server.starttls()
