@@ -741,10 +741,10 @@ const getInstanceAlert = (instance) => {
     <>
       {ToastRoot}
 
-      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
 
       {/* ================= LEFT BRAND SECTION ================= */}
-      <div className="flex flex-col justify-start lg:justify-center px-6 sm:px-10 lg:px-16 py-10 lg:py-0 min-h-[100svh] lg:min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
+      <div className="flex flex-col justify-start lg:justify-center px-6 sm:px-10 lg:px-16 py-6 lg:py-0 min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
 
         <div className="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-r from-blue-400 to-indigo-500" />
 
@@ -770,7 +770,7 @@ const getInstanceAlert = (instance) => {
       </div>
 
       {/* ================= RIGHT LOGIN SECTION ================= */}
-      <div className="flex items-start lg:items-center justify-center bg-transparent px-4 pt-6 lg:pt-0">
+      <div className="flex items-center justify-center bg-transparent px-4 py-6 lg:py-0">
 
         <div className="bg-white/90 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl p-8 animate-fadeIn">
 
