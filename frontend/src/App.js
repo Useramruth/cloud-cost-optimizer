@@ -744,7 +744,7 @@ const getInstanceAlert = (instance) => {
       <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
       {/* ================= LEFT BRAND SECTION ================= */}
-      <div className="hidden lg:flex flex-col justify-center px-16 bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
+      <div className="flex flex-col justify-center px-6 sm:px-10 lg:px-16 min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
 
         <div className="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-r from-blue-400 to-indigo-500" />
 
@@ -770,9 +770,9 @@ const getInstanceAlert = (instance) => {
       </div>
 
       {/* ================= RIGHT LOGIN SECTION ================= */}
-      <div className="flex items-center justify-center bg-gray-50 px-4">
+      <div className="flex items-center justify-center bg-transparent px-4">
 
-        <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 animate-fadeIn">
+        <div className="bg-white/90 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl p-8 animate-fadeIn">
 
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-1">
             Welcome Back 👋
