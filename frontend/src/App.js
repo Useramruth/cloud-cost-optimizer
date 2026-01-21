@@ -744,33 +744,33 @@ const getInstanceAlert = (instance) => {
       <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
       {/* ================= LEFT BRAND SECTION ================= */}
-      <div className="flex flex-col justify-center px-6 sm:px-10 lg:px-16 min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
+      <div className="flex flex-col justify-start lg:justify-center px-6 sm:px-10 lg:px-16 py-10 lg:py-0 min-h-[100svh] lg:min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
 
         <div className="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-r from-blue-400 to-indigo-500" />
 
-        <h1 className="text-4xl font-extrabold mb-4 relative z-10">
-          ☁️ Cloud Cost Optimizer
+        <h1 className="text-3xl lg:text-4xl font-extrabold mb-3 lg:mb-4 relative z-10">
+         ☁️ Cloud Cost Optimizer
         </h1>
 
-        <p className="text-lg text-blue-100 mb-8 relative z-10 max-w-md">
+        <p className="text-base lg:text-lg text-blue-100 mb-4 lg:mb-8 relative z-10 max-w-md">
           A smart platform to monitor, analyze, and reduce cloud infrastructure
           costs in real time.
         </p>
 
-        <ul className="space-y-4 text-blue-100 relative z-10">
+        <ul className="space-y-2 lg:space-y-4 text-blue-100 relative z-10 text-sm lg:text-base">
           <li>✔ Real-time cloud cost monitoring</li>
           <li>✔ Idle resource detection & savings</li>
           <li>✔ Secure role-based access</li>
           <li>✔ Complete audit & activity logs</li>
         </ul>
 
-        <p className="mt-10 text-sm text-blue-200 relative z-10">
+        <p className="mt-4 lg:mt-10 text-xs lg:text-sm text-blue-200 relative z-10">
           Designed as a production-ready DevOps & Cloud project
         </p>
       </div>
 
       {/* ================= RIGHT LOGIN SECTION ================= */}
-      <div className="flex items-center justify-center bg-transparent px-4">
+      <div className="flex items-start lg:items-center justify-center bg-transparent px-4 pt-6 lg:pt-0">
 
         <div className="bg-white/90 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl p-8 animate-fadeIn">
 
