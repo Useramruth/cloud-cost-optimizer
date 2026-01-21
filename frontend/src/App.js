@@ -741,10 +741,10 @@ const getInstanceAlert = (instance) => {
     <>
       {ToastRoot}
 
-      <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen overflow-hidden">
 
       {/* ================= LEFT BRAND SECTION ================= */}
-      <div className="flex flex-col justify-start lg:justify-center px-6 sm:px-10 lg:px-16 py-6 lg:py-0 min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
+      <div className="flex flex-col justify-start lg:justify-center px-6 sm:px-10 lg:px-16 py-6 lg:py-0 h-auto lg:min-h-screen bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 text-white relative overflow-hidden">
 
         <div className="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-r from-blue-400 to-indigo-500" />
 
@@ -764,13 +764,13 @@ const getInstanceAlert = (instance) => {
           <li>✔ Complete audit & activity logs</li>
         </ul>
 
-        <p className="mt-4 lg:mt-10 text-xs lg:text-sm text-blue-200 relative z-10">
+        <p className="mt-3 lg:mt-10 text-xs lg:text-sm text-blue-200 relative z-10">
           Designed as a production-ready DevOps & Cloud project
         </p>
       </div>
 
       {/* ================= RIGHT LOGIN SECTION ================= */}
-      <div className="flex items-center justify-center bg-transparent px-4 py-6 lg:py-0">
+      <div className="flex items-center lg:items-center justify-center px-4 py-6 lg:py-0">
 
         <div className="bg-white/90 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl p-8 animate-fadeIn">
 
