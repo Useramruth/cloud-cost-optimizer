@@ -138,10 +138,12 @@ Audit transparency & compliance mindset
 Demo-safe architecture design
 
 
-(--------🏗 Architecture Diagram -------------)
+## 🏗 Architecture Diagram
 
 ![Cloud Cost Optimizer Architecture](docs/architecture.png)
 
+
+```text
 ┌──────────────────┐
 │   User Browser   │
 │ (Desktop/Mobile) │
@@ -164,14 +166,14 @@ Demo-safe architecture design
 │  - Audit Logs    │
 └───────┬────┬─────┘
         │    │
-        │    │
         ▼    ▼
 ┌─────────────┐   ┌────────────────┐
 │ PostgreSQL  │   │   AWS Services │
-│  (NeonDB)  │   │  - EC2          │
-│  - Users   │   │  - CloudWatch   │
-│  - Logs    │   │  - Cost Metrics │
+│  (NeonDB)   │   │  - EC2          │
+│  - Users    │   │  - CloudWatch   │
+│  - Logs     │   │  - Cost Metrics │
 └─────────────┘   └────────────────┘
+
 
 
 📬 Author
