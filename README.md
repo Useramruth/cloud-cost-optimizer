@@ -138,14 +138,13 @@ Audit transparency & compliance mindset
 Demo-safe architecture design
 
 
-
 ## 🏗 Architecture Diagram
 
 ![Cloud Cost Optimizer Architecture](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/architecture.png)
 
 ![App Components](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/appcomponents.png)
 
-![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/awsjoe_Flask-Microservice_f2.png)
+![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/maindocsawsjoe_Flask-Microservice_f2.png)
 
 
 
@@ -178,7 +177,11 @@ Demo-safe architecture design
 │  (NeonDB)   │   │  - EC2         │
 │  - Users    │   │  - CloudWatch  │
 │  - Logs     │   │  - Cost Metrics│
+│  (NeonDB)   │   │  - EC2         │
+│  - Users    │   │  - CloudWatch  │
+│  - Logs     │   │  - Cost Metrics│
 └─────────────┘   └────────────────┘
+
 
 
 📬 Author
