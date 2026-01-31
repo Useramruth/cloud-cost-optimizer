@@ -1,8 +1,8 @@
 # ☁️ Cloud Cost Optimizer
 
-A **production-ready Cloud Cost Monitoring & Optimization platform** built using **React, Python Flask, PostgreSQL, Docker, and AWS**.
+A production-ready Cloud Cost Monitoring & Optimization platform built using React, Python (Flask), PostgreSQL, Docker, and AWS.
 
-This project helps organizations monitor cloud usage, identify idle resources, reduce unnecessary spending, and maintain **audit transparency**.
+This project helps organizations monitor cloud usage, identify idle resources, reduce unnecessary spending, and maintain audit transparency.
 
 ---
 
@@ -109,8 +109,8 @@ Frontend: http://localhost:3000
 Backend API: http://localhost:5001
 
 (-----------------👤 Default Demo Login-------------------) // NOTE THIS......
-Username: demo
-Password: demo123
+Username: Demo
+Password: Demo@Cloud#2026
 Role: Viewer
 
 Admin login is disabled in Demo Mode.
@@ -137,6 +137,43 @@ Audit transparency & compliance mindset
 
 Demo-safe architecture design
 
+
+(--------🏗 Architecture Diagram -------------)
+
+## 🏗 Architecture Diagram
+
+![Cloud Cost Optimizer Architecture](docs/architecture.png)
+
+┌──────────────────┐
+│   User Browser   │
+│ (Desktop/Mobile) │
+└─────────┬────────┘
+          │ HTTPS
+          ▼
+┌──────────────────┐
+│  React Frontend  │
+│ (Vercel / Nginx) │
+│  - Login / OTP   │
+│  - Dashboard UI  │
+└─────────┬────────┘
+          │ REST API (JWT)
+          ▼
+┌──────────────────┐
+│ Flask Backend API│
+│  - Auth (JWT)    │
+│  - OTP Email     │
+│  - Cost Logic    │
+│  - Audit Logs    │
+└───────┬────┬─────┘
+        │    │
+        │    │
+        ▼    ▼
+┌─────────────┐   ┌────────────────┐
+│ PostgreSQL  │   │   AWS Services │
+│  (NeonDB)  │   │  - EC2          │
+│  - Users   │   │  - CloudWatch   │
+│  - Logs    │   │  - Cost Metrics │
+└─────────────┘   └────────────────┘
 
 
 📬 Author
