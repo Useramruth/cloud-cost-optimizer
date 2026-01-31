@@ -144,9 +144,7 @@ Demo-safe architecture design
 
 ![App Components](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/appcomponents.png)
 
-![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/maindocsawsjoe_Flask-Microservice_f2.png)
-
-
+![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/awsjoe_Flask-Microservice_f2.png)
 
 ```text
 ┌──────────────────┐
@@ -174,9 +172,6 @@ Demo-safe architecture design
         ▼    ▼
 ┌─────────────┐   ┌────────────────┐
 │ PostgreSQL  │   │   AWS Services │
-│  (NeonDB)   │   │  - EC2         │
-│  - Users    │   │  - CloudWatch  │
-│  - Logs     │   │  - Cost Metrics│
 │  (NeonDB)   │   │  - EC2         │
 │  - Users    │   │  - CloudWatch  │
 │  - Logs     │   │  - Cost Metrics│
