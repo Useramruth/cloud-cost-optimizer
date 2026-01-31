@@ -140,7 +140,7 @@ Demo-safe architecture design
 
 ## 🏗 Architecture Diagram
 
-![Cloud Cost Optimizer Architecture](docs/architecture.png)
+![Cloud Cost Optimizer Architecture](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/architecture.png)
 
 
 ```text
