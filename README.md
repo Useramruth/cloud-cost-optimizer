@@ -146,6 +146,25 @@ Demo-safe architecture design
 
 ![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/awsjoe_Flask-Microservice_f2.png)
 
+---
+
+## 🖼 App UI Screenshots
+
+### 🔐 Login Page
+![Login Page](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/screenshots/login.png)
+
+### 📊 Dashboard
+![Dashboard](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/screenshots/dashboard.png)
+
+### ☁️ EC2 Instances View
+![Instances](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/screenshots/instances.png)
+
+### 🧾 Audit Logs
+![Audit Logs](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/screenshots/audit-logs.png)
+
+### 🌐 Demo Users View
+![Demo](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/screenshots/demo.png)
+
 ```text
 ┌──────────────────┐
 │   User Browser   │
