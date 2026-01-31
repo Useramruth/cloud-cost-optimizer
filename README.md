@@ -142,6 +142,11 @@ Demo-safe architecture design
 
 ![Cloud Cost Optimizer Architecture](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/architecture.png)
 
+![App Components](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/appcomponents.png)
+
+![AWS Microservice](https://raw.githubusercontent.com/Useramruth/cloud-cost-optimizer/main/docs/awsjoe_Flask-Microservice_f2.png)
+
+
 
 ```text
 ┌──────────────────┐
